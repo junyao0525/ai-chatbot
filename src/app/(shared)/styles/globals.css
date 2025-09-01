@@ -1,6 +1,7 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 /* Keep your CSS variables */
-:root {
+/* :root {
   --text-primary: var(--gray-800);
   --text-secondary: var(--gray-700);
 
@@ -23,4 +24,12 @@
   --function-error: var(--red-500);
   --function-success: var(--green-500);
   --function-warning: var(--yellow-500);
+} */
+/* 
+.theme-surface {
+  @apply bg-surface-light text-text-light dark:bg-surface-dark dark:text-text-dark;
 }
+
+.theme-accent {
+  @apply bg-accent-light dark:bg-accent-dark;
+} */

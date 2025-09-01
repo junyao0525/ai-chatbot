@@ -19,7 +19,8 @@ const useTheme = () => {
     return false;
   }, []);
 
-  const [isDark, setIsDark] = useState(readMode);
+  // Initialize with the evaluated boolean, not the function reference
+  const [isDark, setIsDark] = useState(() => readMode());
 
   const toggleTheme = () => {
     localStorage.setItem(THEME_KEY, !isDark ? "dark" : "light");
