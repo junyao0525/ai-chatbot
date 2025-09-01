@@ -2,9 +2,10 @@
 import useDrawer from "@/providers/drawerProvider";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRef } from "react";
+import { InputField } from "./inputField";
 
 export const ModelDrawer = () => {
-  const { isOpen, isModelOpen, toggleModelDrawer, isActive } = useDrawer();
+  const { isOpen, isModelOpen, toggleModelDrawer, isActiveItem } = useDrawer();
   const drawerRef = useRef<HTMLElement>(null);
 
   return (
@@ -13,13 +14,19 @@ export const ModelDrawer = () => {
       className={`
         fixed inset-y-0 z-[39] 
         ${isOpen ? "start-[180px]" : "start-[60px]"}
-        ${isModelOpen ? "w-[250px] shadow-xl" : ""} 
-        ${isActive === "Chat" ? "block" : "hidden"}
+        ${isModelOpen ? "w-[250px] shadow-xl border-r-2 border-[#1a3a40]" : ""} 
+        ${isActiveItem === "Chat" ? "block" : "hidden"}
         overflow-y-auto transition-all duration-300 ease-in-out 
-        bg-white pt-4 dark:bg-[#233]
+        pt-4 bg-[var(--bg-primary)] 
       `}>
       {/* Header */}
-      <div className="fixed flex flex-col items-center gap-2 pl-2">
+      <div className="fixed flex flex-row items-center gap-1 pl-3">
+        <InputField
+          placeholder="Search"
+          className={`h-8 dark:bg-[#252528] bg-gray-600 ${
+            isModelOpen ? "w-full" : "hidden"
+          }`}
+        />
         <button
           className="cursor-pointer p-2"
           onClick={toggleModelDrawer}>

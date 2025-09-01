@@ -1,35 +1,43 @@
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
-/* Keep your CSS variables */
-/* :root {
-  --text-primary: var(--gray-800);
-  --text-secondary: var(--gray-700);
 
-  --bg-white: #fff;
-  --bg-gray: var(--gray-100);
-  --bg-nav: var(--gray-200);
-
-  --border-light: var(--gray-300);
-  --border-primary: rgba(79, 89, 102, 0.122);
-  --border-active: var(--blue-500);
-
-  --icon-primary: var(--gray-800);
-  --icon-secondary: var(--gray-700);
-  --icon-brand: var(--blue-500);
-
-  --btn-primary: var(--blue-500);
-  --btn-secondary: var(--gray-200);
-  --btn-tertiary: var(--blue-100);
-
-  --function-error: var(--red-500);
-  --function-success: var(--green-500);
-  --function-warning: var(--yellow-500);
-} */
-/* 
-.theme-surface {
-  @apply bg-surface-light text-text-light dark:bg-surface-dark dark:text-text-dark;
+/* Global CSS Variables */
+:root {
+  /* Text Colors */
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --text-white: #f9fafb;
+  
+  /* Background Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-secondary-dark: #111827;
+  
+  /* Border Colors */
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+  --border-dark: #9ca3af;
+  
+  /* Status Colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
 }
 
-.theme-accent {
-  @apply bg-accent-light dark:bg-accent-dark;
-} */
+/* Dark Mode Variables */
+.dark {
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --text-black: #1f2937;
+  
+  --bg-primary: #112327;        /* dark slate / neutral */
+  --bg-secondary: #111827;      /* navy-gray vibe */
+  --bg-secondary-dark: #030712; /* almost black */
+
+  
+  --border-light: #374151;
+  --border-medium: #4b5563;
+  --border-dark: #6b7280;
+}

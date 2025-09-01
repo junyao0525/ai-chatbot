@@ -6,8 +6,8 @@ type DrawerContextValue = {
   toggleDrawer: () => void;
   isModelOpen: boolean;
   toggleModelDrawer: () => void;
-  isActive: string;
-  setIsActive: (item: string) => void;
+  isActiveItem: string;
+  setIsActiveItem: (item: string) => void;
 };
 
 const DrawerContext = createContext<DrawerContextValue | undefined>(undefined);
@@ -15,7 +15,7 @@ const DrawerContext = createContext<DrawerContextValue | undefined>(undefined);
 export const DrawerProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isModelOpen, setIsModelOpen] = useState<boolean>(false);
-  const [isActive, setIsActive] = useState<string>("Chat");
+  const [isActiveItem, setIsActiveItem] = useState<string>("Chat");
 
   const toggleDrawer = () => setIsOpen((prev) => !prev);
   const toggleModelDrawer = () => setIsModelOpen((prev) => !prev);
@@ -27,8 +27,8 @@ export const DrawerProvider = ({ children }: { children: ReactNode }) => {
         toggleDrawer,
         isModelOpen,
         toggleModelDrawer,
-        isActive,
-        setIsActive,
+        isActiveItem,
+        setIsActiveItem,
       }}>
       {children}
     </DrawerContext.Provider>
