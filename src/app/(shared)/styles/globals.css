@@ -1,0 +1,26 @@
+@import "tailwindcss";
+/* Keep your CSS variables */
+:root {
+  --text-primary: var(--gray-800);
+  --text-secondary: var(--gray-700);
+
+  --bg-white: #fff;
+  --bg-gray: var(--gray-100);
+  --bg-nav: var(--gray-200);
+
+  --border-light: var(--gray-300);
+  --border-primary: rgba(79, 89, 102, 0.122);
+  --border-active: var(--blue-500);
+
+  --icon-primary: var(--gray-800);
+  --icon-secondary: var(--gray-700);
+  --icon-brand: var(--blue-500);
+
+  --btn-primary: var(--blue-500);
+  --btn-secondary: var(--gray-200);
+  --btn-tertiary: var(--blue-100);
+
+  --function-error: var(--red-500);
+  --function-success: var(--green-500);
+  --function-warning: var(--yellow-500);
+}

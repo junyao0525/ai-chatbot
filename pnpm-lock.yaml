@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      lucide-react:
+        specifier: ^0.542.0
+        version: 0.542.0(react@19.1.0)
       next:
         specifier: 15.5.2
         version: 15.5.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -21,6 +24,9 @@ importers:
       '@eslint/eslintrc':
         specifier: ^3
         version: 3.3.1
+      '@iconify/react':
+        specifier: ^6.0.0
+        version: 6.0.0(react@19.1.0)
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.12
@@ -118,6 +124,14 @@ packages:
   '@humanwhocodes/retry@0.4.3':
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
+
+  '@iconify/react@6.0.0':
+    resolution: {integrity: sha512-eqNscABVZS8eCpZLU/L5F5UokMS9mnCf56iS1nM9YYHdH8ZxqZL9zyjSwW60IOQFsXZkilbBiv+1paMXBhSQnw==}
+    peerDependencies:
+      react: '>=16'
+
+  '@iconify/types@2.0.0':
+    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
 
   '@img/sharp-darwin-arm64@0.34.3':
     resolution: {integrity: sha512-ryFMfvxxpQRsgZJqBd4wsttYQbCxsJksrv9Lw/v798JcQ8+w84mBWuXwl+TT0WJ/WrYOLaYpwQXi3sA9nTIaIg==}
@@ -1347,6 +1361,11 @@ packages:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
 
+  lucide-react@0.542.0:
+    resolution: {integrity: sha512-w3hD8/SQB7+lzU2r4VdFyzzOzKnUjTZIF/MQJGSSvni7Llewni4vuViRppfRAa2guOsY5k4jZyxw/i9DQHv+dw==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   magic-string@0.30.18:
     resolution: {integrity: sha512-yi8swmWbO17qHhwIBNeeZxTceJMeBvWJaId6dyvTSOwTipqeHhMhOrz6513r1sOKnpvQ7zkhlG8tPrpilwTxHQ==}
 
@@ -1873,6 +1892,13 @@ snapshots:
   '@humanwhocodes/retry@0.3.1': {}
 
   '@humanwhocodes/retry@0.4.3': {}
+
+  '@iconify/react@6.0.0(react@19.1.0)':
+    dependencies:
+      '@iconify/types': 2.0.0
+      react: 19.1.0
+
+  '@iconify/types@2.0.0': {}
 
   '@img/sharp-darwin-arm64@0.34.3':
     optionalDependencies:
@@ -3199,6 +3225,10 @@ snapshots:
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
+
+  lucide-react@0.542.0(react@19.1.0):
+    dependencies:
+      react: 19.1.0
 
   magic-string@0.30.18:
     dependencies:
