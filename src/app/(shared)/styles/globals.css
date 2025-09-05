@@ -7,6 +7,8 @@
   --text-secondary: #4b5563;
   --text-muted: #6b7280;
   --text-white: #f9fafb;
+  --text-link: #3b82f6; /* blue-500 */
+  --text-link-hover: #1d4ed8;
   
   /* Background Colors */
   --bg-primary: #ffffff;
@@ -17,6 +19,7 @@
   --border-light: #e5e7eb;
   --border-medium: #d1d5db;
   --border-dark: #9ca3af;
+  --border-nav : #3c3c3c;
   
   /* Status Colors */
   --success: #10b981;
@@ -32,6 +35,8 @@
   --text-muted: #9ca3af;
   --text-black: #1f2937;
   --text-white: #f9fafb;
+  --text-link: #3b82f6; /* blue-500 */
+  --text-link-hover: #1d4ed8;
   
   --bg-primary: #112327;        /* dark slate / neutral */
   --bg-secondary: #111827;      /* navy-gray vibe */
@@ -41,4 +46,5 @@
   --border-light: #374151;
   --border-medium: #4b5563;
   --border-dark: #6b7280;
+  --border-nav : #3c3c3c;      /* dark is comform*/
 }

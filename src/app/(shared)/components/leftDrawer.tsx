@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import useTheme from "../hooks/useTheme";
-import useDrawer from "../providers/drawerProvider";
+import { useDrawer } from "../providers/drawerProvider";
 
 type NavItem = {
   label: string;
@@ -52,9 +52,17 @@ const menuList: MenuList[] = [
 
 export const LeftDrawer = () => {
   const drawerRef = useRef<HTMLElement>(null);
-  const { isOpen, toggleDrawer, isActiveItem, setIsActiveItem } = useDrawer();
+  const {
+    isOpen,
+    isSecondaryOpen,
+    toggleDrawer,
+    isActiveItem,
+    setIsActiveItem,
+  } = useDrawer();
   const { isDark, toggleTheme } = useTheme();
   const router = useRouter();
+
+  const className = isOpen ? "w-[180px]" : "w-[60px]";
 
   const handleBottomNavClick = (item: NavItem) => {
     switch (item.label) {
@@ -83,7 +91,7 @@ export const LeftDrawer = () => {
         ref={drawerRef}
         className={`
           fixed inset-y-0 start-0 z-[39]
-          ${isOpen ? "w-[180px]" : "w-[60px]"}
+          ${className}
           overflow-hidden shadow-xl transition-all duration-300 ease-in-out
           px-2 pt-4 bg-[var(--bg-secondary)]
         `}>

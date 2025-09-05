@@ -1,7 +1,7 @@
 "use client";
-import useDrawer from "@/providers/drawerProvider";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRef, useState } from "react";
+import { useDrawer } from "../providers/drawerProvider";
 import { Divider } from "./divider";
 import CustomSwitch from "./switch";
 
@@ -40,7 +40,8 @@ export const chatHistory: ChatHistoryItem[] = [
 ];
 
 export const HistoryDrawer = () => {
-  const { isOpen, isModelOpen, toggleModelDrawer, isActiveItem } = useDrawer();
+  const { isOpen, isSecondaryOpen, toggleSecondaryDrawer, isActiveItem } =
+    useDrawer();
   const drawerRef = useRef<HTMLElement>(null);
   const [checked, setChecked] = useState(false);
 
@@ -51,7 +52,7 @@ export const HistoryDrawer = () => {
         fixed inset-y-0 z-[39] 
         ${isOpen ? "start-[180px]" : "start-[60px]"}
         ${
-          isModelOpen
+          isSecondaryOpen
             ? "w-[250px] shadow-xl border-r-[0.5px] border-[#3c3c3c]"
             : ""
         } 
@@ -61,7 +62,7 @@ export const HistoryDrawer = () => {
       `}>
       {/* Header */}
       <div className="flex flex-row w-full items-center justify-between pl-2">
-        {isModelOpen && (
+        {isSecondaryOpen && (
           <>
             <span className="text-[var(--text-primary)] text-xl font-bold ">
               Chat
@@ -73,7 +74,7 @@ export const HistoryDrawer = () => {
 
         <button
           className="cursor-pointer p-2"
-          onClick={toggleModelDrawer}>
+          onClick={toggleSecondaryDrawer}>
           <Icon
             icon="icon-park-outline:list-bottom"
             className="w-4 h-4 dark:text-[var(--text-primary)] text-[#f9fafb]"
@@ -81,7 +82,7 @@ export const HistoryDrawer = () => {
         </button>
       </div>
 
-      {isModelOpen && (
+      {isSecondaryOpen && (
         <>
           {/* Menu Items (example only) */}
           <div className="flex flex-col pt-4 gap-2">
