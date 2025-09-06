@@ -2,7 +2,6 @@
 import { LeftDrawer } from "@/components/leftDrawer";
 import Head from "next/head";
 import { ReactNode, useEffect } from "react";
-import { useDrawer } from "../../providers/drawerProvider";
 
 type DefaultLayoutProps = {
   children: ReactNode;
@@ -15,8 +14,6 @@ export default function DefaultLayout({
   title = "Monica | Dashboard",
   description = "Default layout for Monica application",
 }: DefaultLayoutProps) {
-  const { isOpen, isSecondaryOpen } = useDrawer();
-
   useEffect(() => {
     if (title) {
       document.title = `${title}`;

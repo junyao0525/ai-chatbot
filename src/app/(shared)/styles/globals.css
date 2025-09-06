@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* globals.css */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--bg-active-hover);
+  border-radius: 9999px;
+}
+
+
 /* Global CSS Variables */
 :root {
   /* Text Colors */
@@ -14,6 +27,8 @@
   --bg-primary: #ffffff;
   --bg-secondary: #f9fafb;
   --bg-secondary-dark: #111827;
+  --bg-active-hover: #e5e7eb;
+  --bg-hover: #374151;
   
   /* Border Colors */
   --border-light: #e5e7eb;
@@ -41,6 +56,8 @@
   --bg-primary: #112327;        /* dark slate / neutral */
   --bg-secondary: #111827;      /* navy-gray vibe */
   --bg-secondary-dark: #030712; /* almost black */
+  --bg-active-hover: #dbeafe;
+  --bg-hover : #1e3a8a;
 
   
   --border-light: #374151;

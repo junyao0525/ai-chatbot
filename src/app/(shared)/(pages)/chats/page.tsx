@@ -2,13 +2,18 @@
 "use client";
 
 import { useDrawer } from "@/app/(shared)/providers/drawerProvider";
+import { MODELS } from "@/app/types/model";
+import { useRouter } from "next/navigation";
 import { Default } from "../../components/chat/default";
 import { Input } from "../../components/chat/input/input";
 import { HistoryDrawer } from "../../components/historyDrawer";
+import useChat from "../../hooks/useChat";
 import DefaultLayout from "../layouts/default";
 
 export default function Chats() {
   const { isOpen, isSecondaryOpen } = useDrawer();
+  const router = useRouter();
+  const { navigateToModel } = useChat();
 
   // adjust main margin depending on whether secondary drawer is open
   const className = isSecondaryOpen ? "ml-[240px]" : "ml-[180px]";
@@ -27,7 +32,10 @@ export default function Chats() {
             <Default />
           </div>
 
-          <Input />
+          <Input
+            modelList={MODELS}
+            handlerDrawer={navigateToModel}
+          />
         </div>
       </div>
     </DefaultLayout>
