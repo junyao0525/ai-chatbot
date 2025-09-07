@@ -5,6 +5,7 @@ import { useDrawer } from "@/app/(shared)/providers/drawerProvider";
 import { ModelInfo, MODELS } from "@/app/types/model";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import clsx from "clsx";
+import Image from "next/image";
 import { useState } from "react";
 import useChat from "../../../hooks/useChat";
 import RightDrawer from "../../rightDrawer";
@@ -67,7 +68,17 @@ const ModelSelector = ({
   </button>
 );
 
-const ActionButtons = ({ actions }: { actions: ActionButton[] }) => (
+const ActionButtons = ({
+  actions,
+  onSend,
+  canSend,
+  isLoading,
+}: {
+  actions: ActionButton[];
+  onSend: () => void;
+  canSend: boolean;
+  isLoading: boolean;
+}) => (
   <div className="flex items-center space-x-2 ml-auto">
     {actions.map((action) => (
       <div
@@ -75,8 +86,9 @@ const ActionButtons = ({ actions }: { actions: ActionButton[] }) => (
         className="relative group">
         <button
           aria-label={action.tooltip || action.id}
-          onClick={action.onClick}
-          className="p-1 hover:bg-[var(--bg-hover)] rounded-full">
+          onClick={action.id === "send" ? onSend : action.onClick}
+          disabled={action.id === "send" ? !canSend || isLoading : false}
+          className="p-1 hover:bg-[var(--bg-hover)] rounded-full disabled:opacity-50 disabled:cursor-not-allowed">
           <Icon
             icon={action.icon}
             className="w-5 h-5"
@@ -93,12 +105,44 @@ const ActionButtons = ({ actions }: { actions: ActionButton[] }) => (
   </div>
 );
 
-const ChatTextarea = () => (
-  <textarea
-    placeholder="Ask Me Question..."
-    className="w-full min-h-[60px] max-h-[120px] px-4 pt-2 rounded-t-lg bg-transparent text-white resize-none focus:outline-none"
-  />
-);
+const ChatTextarea = ({
+  value,
+  onChange,
+  onSend,
+  isLoading,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  onSend: () => void;
+  isLoading: boolean;
+}) => {
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (value.trim() && !isLoading) {
+        onSend();
+      }
+    }
+  };
+
+  return (
+    <div className="relative">
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyPress={handleKeyPress}
+        placeholder="Ask Me Question..."
+        disabled={isLoading}
+        className="w-full min-h-[60px] max-h-[120px] px-4 pt-2 rounded-t-lg bg-transparent text-white resize-none focus:outline-none disabled:opacity-50"
+      />
+      {isLoading && (
+        <div className="absolute right-3 top-3">
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ModelDrawer = ({
   isOpen,
@@ -131,10 +175,12 @@ const ModelDrawer = ({
             onSelectModel?.(model);
             onClose();
           }}>
-          <img
+          <Image
             src={model.logo}
             alt={model.name}
-            className="w-6 h-6 rounded"
+            className="rounded"
+            width={24}
+            height={24}
           />
           <span>{model.name}</span>
           {model.badge && (
@@ -151,13 +197,18 @@ export const Input = ({
   modelList = MODELS,
   actions = defaultActions,
   handlerDrawer,
+  onSendMessage,
+  isLoading = false,
 }: {
   modelList?: ModelInfo[];
   actions?: ActionButton[];
   handlerDrawer?: (modelId?: string) => void | Promise<void>;
+  onSendMessage?: (message: string) => void;
+  isLoading?: boolean;
 }) => {
   const { isOpen, isSecondaryOpen } = useDrawer();
   const [isOpenDrawer, setOpenDrawer] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
   // Use useChat hook to get current model and navigation function
   const { currentModel, navigateToModel } = useChat();
@@ -192,6 +243,15 @@ export const Input = ({
     }
   };
 
+  const handleSendMessage = () => {
+    if (inputValue.trim() && !isLoading && onSendMessage) {
+      onSendMessage(inputValue.trim());
+      setInputValue(""); // Clear input after sending
+    }
+  };
+
+  const canSend = inputValue.trim().length > 0 && !isLoading;
+
   return (
     <>
       <div className={containerClass}>
@@ -207,11 +267,21 @@ export const Input = ({
 
           {/* Chat Input Area */}
           <div className="flex flex-col w-full rounded-lg border border-[var(--border-nav)] bg-[var(--bg-primary)] focus-within:ring-1 focus-within:ring-white">
-            <ChatTextarea />
+            <ChatTextarea
+              value={inputValue}
+              onChange={setInputValue}
+              onSend={handleSendMessage}
+              isLoading={isLoading}
+            />
 
             {/* Action Buttons */}
             <div className="flex flex-row items-center px-3 bg-[var(--bg-primary)] text-white rounded-b-lg">
-              <ActionButtons actions={actions} />
+              <ActionButtons
+                actions={actions}
+                onSend={handleSendMessage}
+                canSend={canSend}
+                isLoading={isLoading}
+              />
             </div>
 
             {/* Footer Placeholder */}

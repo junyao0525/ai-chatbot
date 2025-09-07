@@ -209,6 +209,13 @@ export const MODELS: ModelInfo[] = [
       "OpenAI’s image generation model for high-quality artwork and visual content.",
     badge: "Art",
   },
+  {
+    name: "Mistral",
+    id: "mistral",
+    logo: "/Mistral-AI.png",
+    description: "Mistral Ai",
+    badge: "Chat",
+  },
 ];
 
 // Model name to ID mapping
