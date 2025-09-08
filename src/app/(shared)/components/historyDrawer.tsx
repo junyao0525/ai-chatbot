@@ -49,7 +49,7 @@ export const HistoryDrawer = () => {
     <nav
       ref={drawerRef}
       className={`
-        fixed inset-y-0 z-[39] 
+        fixed inset-y-0 z-[40] 
         ${isOpen ? "start-[180px]" : "start-[60px]"}
         ${
           isSecondaryOpen

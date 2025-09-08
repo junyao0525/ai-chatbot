@@ -55,7 +55,7 @@ export default function RightDrawer({
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-10 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 z-[1200] bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity"
           onClick={onClose}
         />
       )}
@@ -63,7 +63,7 @@ export default function RightDrawer({
       {/* Sidebar */}
       <div
         ref={ref}
-        className={`fixed end-0 top-0 z-[11] h-full border bg-[var(--bg-primary)] shadow-lg transition-transform duration-300 border-[var(--border-nav)]
+        className={`fixed end-0 top-0 z-[1201] h-full border bg-[var(--bg-primary)] shadow-lg transition-transform duration-300 border-[var(--border-nav)]
           ${getWidthClasses()}
           ${isOpen ? "translate-x-0" : "translate-x-full"}
         `}>

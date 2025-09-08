@@ -193,6 +193,7 @@ export default function ChatModel() {
 
           {/* Image previews are rendered inside Input (below model selection) */}
 
+          <FileDropzone onFiles={handleFiles} />
           <Input
             modelList={MODELS}
             handlerDrawer={navigateToModel}
@@ -201,7 +202,6 @@ export default function ChatModel() {
             imageAttachments={attachedFiles}
             onRemoveAttachment={removeAttachedFile}
           />
-          <FileDropzone onFiles={handleFiles} />
         </div>
       </div>
     </DefaultLayout>

@@ -232,7 +232,7 @@ export const Input = ({
 
   // Responsive container: stick to bottom-right and set left offset based on drawers
   const containerClass = clsx(
-    "fixed bottom-0 right-0 z-[1100] bg-[var(--bg-primary)] pb-4 px-4 sm:px-6 md:px-10 pt-2 transition-all duration-200",
+    "fixed bottom-0 right-0 z-[1000] bg-[var(--bg-primary)] pb-4 px-4 sm:px-6 md:px-10 pt-2 transition-all duration-200",
     isOpen
       ? isSecondaryOpen
         ? "left-[420px]"

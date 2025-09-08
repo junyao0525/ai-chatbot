@@ -90,7 +90,7 @@ export const LeftDrawer = () => {
       <nav
         ref={drawerRef}
         className={`
-          fixed inset-y-0 start-0 z-[39]
+          fixed inset-y-0 start-0 z-[50]
           ${className}
           overflow-hidden shadow-xl transition-all duration-300 ease-in-out
           px-2 pt-4 bg-[var(--bg-secondary)]
@@ -192,7 +192,7 @@ export const LeftDrawer = () => {
         {/* Bottom Nav */}
         <div
           className={`
-            fixed bottom-0 left-0 z-50
+            fixed bottom-0 left-0 z-[51]
             flex justify-around items-center
             shadow-md h-auto transition-all duration-300 ease-in-out
             ${
@@ -209,7 +209,7 @@ export const LeftDrawer = () => {
           />
           <div
             className={`
-              fixed bottom-0 left-0 z-50
+              fixed bottom-0 left-0 z-[51]
               flex justify-around items-center
               shadow-md h-auto pb-2 transition-all duration-300 ease-in-out
               ${
