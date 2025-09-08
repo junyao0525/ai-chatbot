@@ -14,6 +14,7 @@ import useChat from "../../../hooks/useChat";
 import { DEFAULT_MODEL, MODELS, getModelById } from "@/app/types/model";
 
 // Imports - Layout & Utils
+import FileDropzone from "@/app/(shared)/components/fileDropzone";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
@@ -41,6 +42,28 @@ export default function ChatModel() {
   >([]);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+
+  // inside ChatModel component
+  const handleFiles = (files: File[]) => {
+    // Allow multiple images only; dedupe by name+size+mtime
+    const imageFiles = files.filter((f) => f.type.startsWith("image/"));
+    setAttachedFiles((prev) => {
+      const existingKeys = new Set(
+        prev.map((f) => f.name + f.size + f.lastModified)
+      );
+      const toAdd = imageFiles.filter(
+        (f) => !existingKeys.has(f.name + f.size + f.lastModified)
+      );
+      return [...prev, ...toAdd];
+    });
+  };
+
+  const removeAttachedFile = (index: number) => {
+    setAttachedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Previews are rendered inside the Input component
 
   const handleSendMessage = useCallback(
     async (message: string) => {
@@ -89,6 +112,13 @@ export default function ChatModel() {
   console.log(messages);
 
   const mainMargin = isSecondaryOpen ? "ml-[240px]" : "ml-[180px]";
+  const inputLeftClass = isOpen
+    ? isSecondaryOpen
+      ? "left-[420px]"
+      : "left-[360px]"
+    : isSecondaryOpen
+    ? "left-[300px]"
+    : "left-[180px]";
 
   return (
     <DefaultLayout
@@ -161,12 +191,17 @@ export default function ChatModel() {
             />
           </div>
 
+          {/* Image previews are rendered inside Input (below model selection) */}
+
           <Input
             modelList={MODELS}
             handlerDrawer={navigateToModel}
             onSendMessage={handleSendMessage}
             isLoading={isLoading}
+            imageAttachments={attachedFiles}
+            onRemoveAttachment={removeAttachedFile}
           />
+          <FileDropzone onFiles={handleFiles} />
         </div>
       </div>
     </DefaultLayout>

@@ -10,6 +10,10 @@ import { useState } from "react";
 import useChat from "../../../hooks/useChat";
 import RightDrawer from "../../rightDrawer";
 
+/* -------------------------------------------------------------------------- */
+/*                               Interfaces                                   */
+/* -------------------------------------------------------------------------- */
+
 export interface ActionButton {
   id: string;
   icon: string; // Iconify icon name
@@ -17,7 +21,10 @@ export interface ActionButton {
   tooltip?: string; // Optional tooltip text
 }
 
-// Default dynamic buttons
+/* -------------------------------------------------------------------------- */
+/*                               Default Actions                              */
+/* -------------------------------------------------------------------------- */
+
 const defaultActions: ActionButton[] = [
   {
     id: "Voice",
@@ -34,7 +41,7 @@ const defaultActions: ActionButton[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/*                               Subcomponents                               */
+/*                               Subcomponents                                */
 /* -------------------------------------------------------------------------- */
 
 const ModelSelector = ({
@@ -133,7 +140,7 @@ const ChatTextarea = ({
         onKeyPress={handleKeyPress}
         placeholder="Ask Me Question..."
         disabled={isLoading}
-        className="w-full min-h-[60px] max-h-[120px] px-4 pt-2 rounded-t-lg bg-transparent text-white resize-none focus:outline-none disabled:opacity-50"
+        className="w-full min-h-[60px] max-h-[140px] px-4 pt-2 rounded-t-lg bg-transparent text-white resize-none focus:outline-none disabled:opacity-50"
       />
       {isLoading && (
         <div className="absolute right-3 top-3">
@@ -193,60 +200,61 @@ const ModelDrawer = ({
     </div>
   </RightDrawer>
 );
+
+/* -------------------------------------------------------------------------- */
+/*                                  Input                                     */
+/* -------------------------------------------------------------------------- */
+
 export const Input = ({
   modelList = MODELS,
   actions = defaultActions,
   handlerDrawer,
   onSendMessage,
   isLoading = false,
+  imageAttachments = [],
+  onRemoveAttachment,
 }: {
   modelList?: ModelInfo[];
   actions?: ActionButton[];
   handlerDrawer?: (modelId?: string) => void | Promise<void>;
   onSendMessage?: (message: string) => void;
   isLoading?: boolean;
+  imageAttachments?: File[];
+  onRemoveAttachment?: (index: number) => void;
 }) => {
   const { isOpen, isSecondaryOpen } = useDrawer();
   const [isOpenDrawer, setOpenDrawer] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  // Use useChat hook to get current model and navigation function
   const { currentModel, navigateToModel } = useChat();
 
-  // Use currentModel from useChat hook, fallback to first model in list
   const selectedModel = currentModel || modelList?.[0] || MODELS[0];
 
+  // Responsive container: stick to bottom-right and set left offset based on drawers
   const containerClass = clsx(
-    "fixed bottom-0 right-0 bg-[var(--bg-primary)] px-10 pt-2",
+    "fixed bottom-0 right-0 z-[1100] bg-[var(--bg-primary)] pb-4 px-4 sm:px-6 md:px-10 pt-2 transition-all duration-200",
     isOpen
       ? isSecondaryOpen
         ? "left-[420px]"
         : "left-[360px]"
       : isSecondaryOpen
       ? "left-[300px]"
-      : "left-[180px]"
+      : "left-0"
   );
 
   const handleSelectModel = (model: ModelInfo) => {
-    // Use the navigateToModel from useChat hook
     try {
       navigateToModel(model.id);
-    } catch (err) {
-      console.error("navigateToModel error:", err);
-    }
-
-    // Also call the provided handlerDrawer if it exists
-    try {
       handlerDrawer?.(model.id);
     } catch (err) {
-      console.error("handlerDrawer error:", err);
+      console.error("Error selecting model:", err);
     }
   };
 
   const handleSendMessage = () => {
     if (inputValue.trim() && !isLoading && onSendMessage) {
       onSendMessage(inputValue.trim());
-      setInputValue(""); // Clear input after sending
+      setInputValue("");
     }
   };
 
@@ -255,8 +263,48 @@ export const Input = ({
   return (
     <>
       <div className={containerClass}>
-        <div className="flex flex-col max-w-full mx-auto rounded-lg h-[180px] items-center focus:outline-none focus:ring-1 focus:ring-white">
-          {/* Model Selection */}
+        <div
+          className={clsx(
+            "flex flex-col max-w-full mx-auto rounded-lg",
+            imageAttachments.length > 0
+              ? "min-h-[200px] max-h-[40vh]"
+              : "min-h-[140px] max-h-[35vh]"
+          )}>
+          {/* Image previews */}
+          {imageAttachments.length > 0 && (
+            <div className="w-full mt-2 overflow-x-auto">
+              <div className="flex items-center gap-3 py-2 ">
+                {imageAttachments.map((file, idx) => {
+                  const url = URL.createObjectURL(file);
+                  return (
+                    <div
+                      key={file.name + file.size + file.lastModified}
+                      className="relative w-16 h-16 flex-shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={url}
+                        alt={file.name}
+                        className="w-16 h-16 object-cover rounded border border-[var(--border)] bg-[var(--bg-secondary)]"
+                        onLoad={() => URL.revokeObjectURL(url)}
+                      />
+                      <button
+                        type="button"
+                        aria-label={`Remove ${file.name}`}
+                        onClick={() => onRemoveAttachment?.(idx)}
+                        className="absolute -top-2 -right-2 text-[10px] px-1 py-1 rounded-full bg-[var(--bg-secondary)] text-[var(--text-primary)] shadow cursor-pointer">
+                        <Icon
+                          icon="mdi:close"
+                          className="w-4 h-4"
+                        />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Model Selector */}
           <div className="flex flex-row bg-[var(--bg-primary)] h-10 w-full space-x-4">
             <ModelSelector
               selectedModel={selectedModel}
@@ -265,7 +313,7 @@ export const Input = ({
             />
           </div>
 
-          {/* Chat Input Area */}
+          {/* Chat Input */}
           <div className="flex flex-col w-full rounded-lg border border-[var(--border-nav)] bg-[var(--bg-primary)] focus-within:ring-1 focus-within:ring-white">
             <ChatTextarea
               value={inputValue}
@@ -274,7 +322,7 @@ export const Input = ({
               isLoading={isLoading}
             />
 
-            {/* Action Buttons */}
+            {/* Action buttons */}
             <div className="flex flex-row items-center px-3 bg-[var(--bg-primary)] text-white rounded-b-lg">
               <ActionButtons
                 actions={actions}
@@ -282,11 +330,6 @@ export const Input = ({
                 canSend={canSend}
                 isLoading={isLoading}
               />
-            </div>
-
-            {/* Footer Placeholder */}
-            <div className="px-3 bg-[var(--bg-secondary)] text-white rounded-b-lg">
-              name
             </div>
           </div>
         </div>
