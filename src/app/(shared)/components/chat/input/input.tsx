@@ -236,7 +236,7 @@ export const Input = ({
     isOpen
       ? isSecondaryOpen
         ? "left-[430px]" // 180px (left drawer) + 250px (history drawer)
-        : "left-[180px]" // 180px (left drawer only)
+        : "left-[360px]" // 360px (left drawer only)
       : isSecondaryOpen
       ? "left-[310px]" // 60px (left drawer closed) + 250px (history drawer)
       : "left-[180px]" // no drawers
