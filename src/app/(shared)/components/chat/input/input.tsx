@@ -232,14 +232,14 @@ export const Input = ({
 
   // Responsive container: stick to bottom-right and set left offset based on drawers
   const containerClass = clsx(
-    "fixed bottom-0 right-0 z-[1000] bg-[var(--bg-primary)] pb-4 px-4 sm:px-6 md:px-10 pt-2 transition-all duration-200",
+    "fixed bottom-0 right-0  bg-[var(--bg-primary)] pb-4 px-4 sm:px-6 md:px-10 pt-2 transition-all duration-200",
     isOpen
       ? isSecondaryOpen
-        ? "left-[420px]"
-        : "left-[360px]"
+        ? "left-[430px]" // 180px (left drawer) + 250px (history drawer)
+        : "left-[180px]" // 180px (left drawer only)
       : isSecondaryOpen
-      ? "left-[300px]"
-      : "left-0"
+      ? "left-[310px]" // 60px (left drawer closed) + 250px (history drawer)
+      : "left-[180px]" // no drawers
   );
 
   const handleSelectModel = (model: ModelInfo) => {

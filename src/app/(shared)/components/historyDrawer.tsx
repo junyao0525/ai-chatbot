@@ -70,7 +70,7 @@ export const HistoryDrawer = () => {
           </>
         )}
 
-        <div className="border-r-[0.5px] border-[#3c3c3c]"></div>
+        <div className="border-r-[0.5px] border-[#3c3c3c] h-8 flex-1"></div>
 
         <button
           className="cursor-pointer p-2"
