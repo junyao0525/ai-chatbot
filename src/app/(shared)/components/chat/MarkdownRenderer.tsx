@@ -247,7 +247,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
     }, []);
 
     return (
-      <div className="group relative my-5 rounded-md border border-neutral-200/50 dark:border-neutral-800/50 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden">
+      <div className="group relative my-2 rounded-md border border-neutral-200/50 dark:border-neutral-800/50 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden">
         {/* Floating Controls */}
         <div className="absolute top-3 right-3 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
@@ -510,7 +510,9 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
       }
 
       return (
-        <p className="my-5 leading-relaxed text-neutral-700 dark:text-neutral-300">
+        <p
+          key={generateKey()}
+          className="my-2 leading-relaxed text-neutral-700 dark:text-neutral-300">
           {children}
         </p>
       );
@@ -557,37 +559,59 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
 
       return (
         <HeadingTag
+          key={generateKey()}
           className={`${sizeClasses} text-neutral-900 dark:text-neutral-50 tracking-tight`}>
           {children}
         </HeadingTag>
       );
     },
     list(children, ordered) {
-      const ListTag = ordered ? "ol" : "ul";
+      const ListTag = ordered ? "ol" : "ul"; // It correctly identifies it as an ordered list ('ol')
       return (
         <ListTag
-          className={`my-5 pl-6 space-y-2 text-neutral-700 dark:text-neutral-300 ${
-            ordered ? "list-decimal" : "list-disc"
-          }`}>
+          key={generateKey()}
+          className={`my-2 pl-6 ... ${ordered ? "list-decimal" : "list-disc"}`}>
           {children}
         </ListTag>
       );
     },
     listItem(children) {
-      return <li className="pl-1 leading-relaxed">{children}</li>;
+      return (
+        <li
+          key={generateKey()}
+          className="pl-1 leading-relaxed">
+          {children}
+        </li>
+      );
     },
     blockquote(children) {
       return (
-        <blockquote className="my-6 border-l-4 border-primary/30 dark:border-primary/20 pl-4 py-1 text-neutral-700 dark:text-neutral-300 italic bg-neutral-50 dark:bg-neutral-900/50 rounded-r-md">
+        <blockquote
+          key={generateKey()}
+          className="my-6 border-l-4 border-primary/30 dark:border-primary/20 pl-4 py-1 text-neutral-700 dark:text-neutral-300 italic bg-neutral-50 dark:bg-neutral-900/50 rounded-r-md">
           {children}
         </blockquote>
       );
     },
     table(children) {
-      return <Table className="!border !rounded-lg !m-0">{children}</Table>;
+      return (
+        <Table
+          key={generateKey()}
+          className="!border !rounded-lg !m-0">
+          {children}
+        </Table>
+      );
     },
     tableRow(children) {
-      return <TableRow>{children}</TableRow>;
+      return (
+        <TableRow key={generateKey()}>
+          {Array.isArray(children)
+            ? children.map((child, index) => (
+                <React.Fragment key={index}>{child}</React.Fragment>
+              ))
+            : children}
+        </TableRow>
+      );
     },
     tableCell(children, flags) {
       const alignClass = flags.align ? `text-${flags.align}` : "text-left";
@@ -595,6 +619,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
 
       return isHeader ? (
         <TableHead
+          key={generateKey()}
           className={cn(
             alignClass,
             "border-r border-border last:border-r-0 bg-muted/50 font-semibold !p-2 !m-1 !text-wrap"
@@ -603,6 +628,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
         </TableHead>
       ) : (
         <TableCell
+          key={generateKey()}
           className={cn(
             alignClass,
             "border-r border-border last:border-r-0 !p-2 !m-1 !text-wrap"
@@ -612,10 +638,30 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
       );
     },
     tableHeader(children) {
-      return <TableHeader className="!p-1 !m-1">{children}</TableHeader>;
+      return (
+        <TableHeader
+          className="!p-1 !m-1"
+          key={generateKey()}>
+          {Array.isArray(children)
+            ? children.map((child, index) => (
+                <React.Fragment key={index}>{child}</React.Fragment>
+              ))
+            : children}
+        </TableHeader>
+      );
     },
     tableBody(children) {
-      return <TableBody className="!text-wrap !m-1">{children}</TableBody>;
+      return (
+        <TableBody
+          className="!text-wrap !m-1"
+          key={generateKey()}>
+          {Array.isArray(children)
+            ? children.map((child, index) => (
+                <React.Fragment key={index}>{child}</React.Fragment>
+              ))
+            : children}
+        </TableBody>
+      );
     },
   };
 

@@ -19,6 +19,7 @@
     "ai": "^5.0.33",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.23.12",
     "katex": "^0.16.22",
     "lucide-react": "^0.542.0",
     "marked-react": "^3.0.1",

@@ -217,7 +217,7 @@ export const Input = ({
   const selectedModel = currentModel || modelList?.[0] || MODELS[0];
 
   const containerClass = clsx(
-    "fixed bottom-0 right-0 bg-[var(--bg-primary)] px-10",
+    "fixed bottom-0 right-0 bg-[var(--bg-primary)] px-10 pt-2",
     isOpen
       ? isSecondaryOpen
         ? "left-[420px]"

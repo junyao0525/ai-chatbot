@@ -42,20 +42,11 @@ export default function ChatModel() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  /** ----------------------------
-   * Handlers
-   * ---------------------------- */
   const handleSendMessage = useCallback(
     async (message: string) => {
       if (!message.trim() || isLoading) return;
-      const response = await fetch("/apis/chats", {
-        method: "POST",
-        body: JSON.stringify({ message }),
-      });
-      const data = await response.json();
-      console.log(data);
 
-      // Add user message
+      // Add user message immediately for instant feedback
       const userMessage = { role: "user" as const, content: message };
       setMessages((prev) => [...prev, userMessage]);
       setIsLoading(true);
@@ -66,6 +57,11 @@ export default function ChatModel() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message }),
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         const assistantText = data?.output ?? data?.message ?? "";
         const aiMessage = {
@@ -90,17 +86,10 @@ export default function ChatModel() {
     [isLoading]
   );
 
-  /** ----------------------------
-   * Layout helpers
-   * ---------------------------- */
+  console.log(messages);
+
   const mainMargin = isSecondaryOpen ? "ml-[240px]" : "ml-[180px]";
 
-  /** ----------------------------
-   * Render
-   * ---------------------------- */
-  /** ----------------------------
-   * Render
-   * ---------------------------- */
   return (
     <DefaultLayout
       title={`${selectedModel?.name || "Chat"} | Monica`}
@@ -113,7 +102,7 @@ export default function ChatModel() {
         }`}>
         <div className={`flex flex-col min-h-screen ${mainMargin} relative`}>
           {/* Case 1: Default model → show landing only */}
-          {selectedModel === DEFAULT_MODEL && (
+          {selectedModel === DEFAULT_MODEL && messages.length === 0 && (
             <div className="px-[40px]">
               <Default />
             </div>
@@ -163,6 +152,14 @@ export default function ChatModel() {
               )}
             </>
           )}
+
+          <div className="flex-1 flex flex-col px-[40px] pb-[200px]">
+            <OutputChat
+              selectedModel={selectedModel}
+              messages={messages}
+              isLoading={isLoading}
+            />
+          </div>
 
           <Input
             modelList={MODELS}
