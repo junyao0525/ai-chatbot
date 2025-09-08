@@ -131,65 +131,58 @@ export default function ChatModel() {
           isOpen ? "ml-[180px]" : isSecondaryOpen ? "ml-[60px]" : ""
         }`}>
         <div className={`flex flex-col min-h-screen ${mainMargin} relative`}>
-          {/* Case 1: Default model → show landing only */}
-          {selectedModel === DEFAULT_MODEL && messages.length === 0 && (
-            <div className="px-[40px]">
-              <Default />
+          {/* Show messages for any model when they exist */}
+          {messages.length > 0 ? (
+            <div className="flex-1 flex flex-col px-[40px] pb-[200px]">
+              <OutputChat
+                selectedModel={selectedModel}
+                messages={messages}
+                isLoading={isLoading}
+              />
             </div>
-          )}
-
-          {/* Case 2 & 3: Non-default model */}
-          {selectedModel !== DEFAULT_MODEL && (
+          ) : (
+            /* Show landing page or model info when no messages */
             <>
-              {/* Header always visible for non-default model */}
-              <div className="flex flex-row gap-2 items-center pt-6 px-[40px]">
-                <Icon
-                  icon="material-symbols:arrow-back"
-                  className="w-6 h-6 text-[var(--text-primary)] cursor-pointer"
-                  onClick={() => router.push("/chats")}
-                />
-                <span className="text-[var(--text-primary)] text-sm font-semibold">
-                  {selectedModel.name}
-                </span>
-              </div>
-
-              {/* Case 2: No messages → show model info */}
-              {messages.length === 0 ? (
-                <div className="flex-grow flex items-center justify-center px-[40px] py-4">
-                  <div className="flex flex-col justify-center items-center space-y-4 py-4">
-                    <img
-                      src={selectedModel.logo}
-                      alt={selectedModel.name}
-                      className="w-10 h-10 rounded"
-                    />
-                    <h1 className="text-xl font-semibold text-[var(--text-primary)]">
-                      {selectedModel.name}
-                    </h1>
-                    <p className="text-sm text-center text-[var(--text-secondary)]">
-                      {selectedModel.description}
-                    </p>
-                  </div>
+              {/* Default model landing */}
+              {selectedModel === DEFAULT_MODEL ? (
+                <div className="px-[40px]">
+                  <Default />
                 </div>
               ) : (
-                /* Case 3: Messages exist → show chat output */
-                <div className="flex-1 flex flex-col px-[40px] pb-[200px]">
-                  <OutputChat
-                    selectedModel={selectedModel}
-                    messages={messages}
-                    isLoading={isLoading}
-                  />
-                </div>
+                /* Non-default model info */
+                <>
+                  {/* Header for non-default model */}
+                  <div className="flex flex-row gap-2 items-center pt-6 px-[40px]">
+                    <Icon
+                      icon="material-symbols:arrow-back"
+                      className="w-6 h-6 text-[var(--text-primary)] cursor-pointer"
+                      onClick={() => router.push("/chats")}
+                    />
+                    <span className="text-[var(--text-primary)] text-sm font-semibold">
+                      {selectedModel.name}
+                    </span>
+                  </div>
+
+                  {/* Model info display */}
+                  <div className="flex-grow flex items-center justify-center px-[40px] py-4">
+                    <div className="flex flex-col justify-center items-center space-y-4 py-4">
+                      <img
+                        src={selectedModel.logo}
+                        alt={selectedModel.name}
+                        className="w-10 h-10 rounded"
+                      />
+                      <h1 className="text-xl font-semibold text-[var(--text-primary)]">
+                        {selectedModel.name}
+                      </h1>
+                      <p className="text-sm text-center text-[var(--text-secondary)]">
+                        {selectedModel.description}
+                      </p>
+                    </div>
+                  </div>
+                </>
               )}
             </>
           )}
-
-          <div className="flex-1 flex flex-col px-[40px] pb-[200px]">
-            <OutputChat
-              selectedModel={selectedModel}
-              messages={messages}
-              isLoading={isLoading}
-            />
-          </div>
 
           {/* Image previews are rendered inside Input (below model selection) */}
 

@@ -1,6 +1,6 @@
 import { ModelInfo } from "@/app/types/model";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Loader2, Pause, Play } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { ReasoningPartView } from "./reasonningPart";
 
@@ -20,58 +20,86 @@ export default function OutputChat({
   messages,
   isLoading,
 }: OutputChatProps) {
-  const [visibleCount, setVisibleCount] = useState(0);
-  const [renderedMessages, setRenderedMessages] = useState<string[]>([]);
+  const [displayedMessages, setDisplayedMessages] = useState<string[]>([]);
+  const [isPaused, setIsPaused] = useState(false);
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(-1);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Show messages one by one
+  // Initialize displayed messages
   useEffect(() => {
-    if (messages.length > visibleCount) {
-      setRenderedMessages((prev) => [...prev, ""]); // prepare slot
-      const timer = setTimeout(() => {
-        setVisibleCount((prev) => prev + 1);
-      }, 300); // delay between messages
-      return () => clearTimeout(timer);
-    }
-  }, [messages, visibleCount]);
+    setDisplayedMessages(messages.map((msg) => msg.content));
+  }, [messages]);
 
-  // Handle typewriter effect for assistant only
+  // Handle typewriter effect for assistant messages
   useEffect(() => {
-    if (visibleCount === 0) return;
+    if (messages.length === 0) return;
 
-    const currentIndex = visibleCount - 1;
-    const msg = messages[currentIndex];
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage.role !== "assistant" || isLoading) return;
 
-    if (msg.role === "user") {
-      // Instantly render user messages
-      setRenderedMessages((prev) => {
-        const updated = [...prev];
-        updated[currentIndex] = msg.content;
-        return updated;
-      });
-      return;
+    // Clear any existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
     }
 
-    // Typewriter effect for assistant
-    const words = msg.content.split(" ");
-    let i = 0;
-    const interval = setInterval(() => {
-      setRenderedMessages((prev) => {
-        const updated = [...prev];
-        updated[currentIndex] = words.slice(0, i + 1).join(" ");
-        return updated;
-      });
-      i++;
-      if (i >= words.length) clearInterval(interval);
-    }, 80);
+    // Reset the last message for typewriter effect
+    setDisplayedMessages((prev) => {
+      const updated = [...prev];
+      updated[updated.length - 1] = "";
+      return updated;
+    });
 
-    return () => clearInterval(interval);
-  }, [visibleCount, messages]);
+    setCurrentMessageIndex(messages.length - 1);
+
+    // Typewriter effect word by word
+    const words = lastMessage.content.split(" ");
+    let wordIndex = 0;
+
+    const typewriter = () => {
+      if (isPaused) return;
+
+      if (wordIndex < words.length) {
+        setDisplayedMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = words.slice(0, wordIndex + 1).join(" ");
+          return updated;
+        });
+        wordIndex++;
+      } else {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      }
+    };
+
+    intervalRef.current = setInterval(typewriter, 100);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [messages, isLoading, isPaused]);
+
+  const togglePause = () => {
+    setIsPaused(!isPaused);
+  };
+
+  const isTyping =
+    currentMessageIndex === messages.length - 1 &&
+    messages[messages.length - 1]?.role === "assistant" &&
+    displayedMessages[displayedMessages.length - 1] !==
+      messages[messages.length - 1]?.content;
 
   return (
     <div className="flex-1 flex flex-col">
       <div className="flex-1 space-y-4 px-4 py-4 pb-4 overflow-y-auto">
-        {renderedMessages.map((content, idx) => {
-          const msg = messages[idx];
+        {messages.map((msg, idx) => {
+          // Use displayed content for typewriter effect
+          const content = displayedMessages[idx] || msg.content;
+
           return (
             <div
               key={idx}
@@ -116,6 +144,24 @@ export default function OutputChat({
             <Loader2 className="w-5 h-5 animate-spin text-[var(--text-secondary)]" />
             <span className="text-sm text-[var(--text-secondary)]">
               Thinking...
+            </span>
+          </div>
+        )}
+
+        {isTyping && (
+          <div className="flex justify-start items-center space-x-2">
+            <button
+              onClick={togglePause}
+              className="p-2 rounded-full hover:bg-gray-700 transition-colors"
+              title={isPaused ? "Resume typing" : "Pause typing"}>
+              {isPaused ? (
+                <Play className="w-4 h-4 text-[var(--text-secondary)]" />
+              ) : (
+                <Pause className="w-4 h-4 text-[var(--text-secondary)]" />
+              )}
+            </button>
+            <span className="text-sm text-[var(--text-secondary)]">
+              {isPaused ? "Paused" : "Typing..."}
             </span>
           </div>
         )}
