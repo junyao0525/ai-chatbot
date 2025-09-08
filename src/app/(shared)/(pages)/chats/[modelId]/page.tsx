@@ -132,14 +132,28 @@ export default function ChatModel() {
         }`}>
         <div className={`flex flex-col min-h-screen ${mainMargin} relative`}>
           {/* Show messages for any model when they exist */}
+
           {messages.length > 0 ? (
-            <div className="flex-1 flex flex-col px-[40px] pb-[200px]">
-              <OutputChat
-                selectedModel={selectedModel}
-                messages={messages}
-                isLoading={isLoading}
-              />
-            </div>
+            <>
+              <div className="flex flex-row gap-2 items-center pt-6 px-[40px]">
+                <Icon
+                  icon="material-symbols:arrow-back"
+                  className="w-6 h-6 text-[var(--text-primary)] cursor-pointer"
+                  onClick={() => router.push("/chats")}
+                />
+                <span className="text-[var(--text-primary)] text-sm font-semibold">
+                  {selectedModel.name}
+                </span>
+              </div>
+
+              <div className="flex-1 flex flex-col px-[40px] pb-[200px]">
+                <OutputChat
+                  selectedModel={selectedModel}
+                  messages={messages}
+                  isLoading={isLoading}
+                />
+              </div>
+            </>
           ) : (
             /* Show landing page or model info when no messages */
             <>
@@ -162,7 +176,6 @@ export default function ChatModel() {
                       {selectedModel.name}
                     </span>
                   </div>
-
                   {/* Model info display */}
                   <div className="flex-grow flex items-center justify-center px-[40px] py-4">
                     <div className="flex flex-col justify-center items-center space-y-4 py-4">
